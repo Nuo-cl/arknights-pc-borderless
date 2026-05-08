@@ -7,6 +7,8 @@
 #SingleInstance Force
 Persistent
 
+DllCall("SetProcessDpiAwarenessContext", "ptr", -4)
+
 if !A_IsAdmin {
     try Run('*RunAs "' A_ScriptFullPath '"')
     ExitApp()

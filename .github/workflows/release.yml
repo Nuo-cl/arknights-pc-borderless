@@ -13,23 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install AutoHotkey v2
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://www.autohotkey.com/download/ahk-v2.zip" -OutFile ahk-v2.zip
-          Expand-Archive ahk-v2.zip -DestinationPath ahk
-          ls ahk -Recurse -Filter *.exe
-
       - name: Compile to exe
-        shell: pwsh
-        run: |
-          $compiler = Get-ChildItem ahk -Recurse -Filter "Ahk2Exe.exe" | Select-Object -First 1
-          & $compiler.FullName /in borderless.ahk /out borderless.exe /silent
-          if (!(Test-Path borderless.exe)) { throw "Compilation failed" }
+        uses: benmusson/ahk2exe-action@v1
+        with:
+          in: borderless.ahk
+          out: borderless.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
           files: |
             borderless.exe
             borderless.ahk

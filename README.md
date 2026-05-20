@@ -12,17 +12,24 @@
 
 本工具将窗口全屏优化为**无边框窗口模式**：没有标题栏，也不遮挡任务栏。
 
+## 下载
+
+从 [Releases](https://github.com/Nuo-cl/arknights-pc-borderless/releases) 页面下载最新版本：
+
+- **borderless.exe** — 直接运行，不需要安装任何东西
+- **borderless.ahk** — 需要 [AutoHotkey v2.0+](https://www.autohotkey.com/)，可直接编辑脚本
+
 ## 环境要求
 
 - Windows 10 / 11
-- [AutoHotkey v2.0+](https://www.autohotkey.com/)
 - 明日方舟PC端 / 明日方舟：终末地
 
 ## 使用方法
 
 1. 将游戏内显示模式设为**窗口全屏**
-2. 双击 `borderless.ahk` 运行（自动请求管理员权限）
+2. 运行 `borderless.exe` 或 `borderless.ahk`（自动请求管理员权限）
 3. 按 `Ctrl+F4` 隐藏标题栏，按 `Ctrl+F7` 恢复
+4. 脚本退出时自动恢复所有窗口
 
 ## 快捷键
 
@@ -33,15 +40,18 @@
 
 ## 自定义配置
 
-编辑脚本顶部的配置区域：
+在脚本同目录下创建 `config.ini` 文件即可自定义配置（不创建则使用默认值）：
 
-```ahk
-global CFG_TITLE := "明日方舟"       ; 窗口标题（如有不同请修改）
-global CFG_KEY_HIDE := "^F4"         ; 隐藏快捷键
-global CFG_KEY_RESTORE := "^F7"      ; 恢复快捷键
+```ini
+[General]
+Title=明日方舟
+HideKey=^F4
+RestoreKey=^F7
 ```
 
 快捷键语法参考 [AutoHotkey v2 Hotkey 文档](https://www.autohotkey.com/docs/v2/Hotkeys.htm)：`^` = Ctrl, `!` = Alt, `+` = Shift, `#` = Win。
+
+使用 `.ahk` 版本时也可以直接编辑脚本顶部的配置区域。
 
 ## 开机自启
 

@@ -15,11 +15,12 @@ if !A_IsAdmin {
 }
 
 ; ============================== 配置 ==============================
-; 可根据需要修改以下配置
+; 优先读取 config.ini（适用于 exe 发布），不存在则用以下默认值
 
-global CFG_TITLE := "明日方舟"       ; 窗口标题关键词（包含匹配，同时适用于终末地）
-global CFG_KEY_HIDE := "^F4"         ; 去标题栏快捷键 (Ctrl+F4)
-global CFG_KEY_RESTORE := "^F7"      ; 恢复标题栏快捷键 (Ctrl+F7)
+global CFG_INI := A_ScriptDir "\config.ini"
+global CFG_TITLE := IniRead(CFG_INI, "General", "Title", "明日方舟")
+global CFG_KEY_HIDE := IniRead(CFG_INI, "General", "HideKey", "^F4")
+global CFG_KEY_RESTORE := IniRead(CFG_INI, "General", "RestoreKey", "^F7")
 
 ; ============================== 状态 ==============================
 ; 按窗口句柄存储每个窗口的原始状态，支持多窗口独立操作
@@ -31,6 +32,7 @@ A_IconTip := "明日方舟 无边框窗口"
 Hotkey(CFG_KEY_HIDE, (*) => HideTitleBar())
 Hotkey(CFG_KEY_RESTORE, (*) => RestoreTitleBar())
 
+OnExit((*) => RestoreAll())
 BuildTray()
 return
 
@@ -80,20 +82,17 @@ HideTitleBar() {
     origStyle := WinGetStyle(hwnd)
     WinGetPos(&ox, &oy, &ow, &oh, hwnd)
 
-    ; 查找窗口所在显示器
-    targetMon := MonitorGetPrimary()
-    monCount := MonitorGetCount()
-    loop monCount {
-        MonitorGet(A_Index, &ml, &mt, &mr, &mb)
-        if ox >= ml && ox < mr && oy >= mt && oy < mb {
-            targetMon := A_Index
-            break
-        }
-    }
-
     try {
         WinSetStyle(origStyle & ~0xC00000 & ~0x40000, hwnd)
-        MonitorGetWorkArea(targetMon, &l, &t, &r, &b)
+        ; 通过 Windows API 直接获取窗口所在显示器的工作区
+        hMon := DllCall("MonitorFromWindow", "ptr", hwnd, "uint", 2)
+        mi := Buffer(40)
+        NumPut("uint", 40, mi, 0)
+        DllCall("GetMonitorInfo", "ptr", hMon, "ptr", mi)
+        l := NumGet(mi, 20, "int")
+        t := NumGet(mi, 24, "int")
+        r := NumGet(mi, 28, "int")
+        b := NumGet(mi, 32, "int")
         WinMove(l, t, r - l, b - t, hwnd)
         g_States[hwnd] := {style: origStyle, x: ox, y: oy, w: ow, h: oh}
         Flash(label " — 已隐藏标题栏")
@@ -130,6 +129,17 @@ RestoreTitleBar() {
     } catch as e {
         MsgBox("恢复失败: " e.Message, "错误", "Icon!")
     }
+}
+
+RestoreAll() {
+    global
+    for hwnd, s in g_States.Clone() {
+        try {
+            WinSetStyle(s.style, hwnd)
+            WinMove(s.x, s.y, s.w, s.h, hwnd)
+        }
+    }
+    g_States.Clear()
 }
 
 ; ============================== 托盘菜单 ==============================

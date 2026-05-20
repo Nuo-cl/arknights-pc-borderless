@@ -1,12 +1,12 @@
 # 明日方舟PC端 无边框窗口工具 / Arknights PC Borderless Window Tool
 
-为**明日方舟PC端（官方桌面版）**及**明日方舟：终末地**设计的无边框窗口工具。去除窗口全屏模式下的白色标题栏，同时保留系统任务栏可见。
+为**明日方舟PC端（官方桌面版）**设计的无边框窗口工具。去除窗口全屏模式下的白色标题栏，同时保留系统任务栏可见。
 
-> A lightweight AutoHotkey v2 tool for the official Arknights PC client and Arknights: Endfield. Removes the title bar in windowed-fullscreen mode while keeping the Windows taskbar visible.
+> A lightweight AutoHotkey v2 tool for the official Arknights PC client. Removes the title bar in windowed-fullscreen mode while keeping the Windows taskbar visible.
 
 ## 解决的问题
 
-明日方舟PC端 / 终末地的显示模式：
+明日方舟PC端的显示模式：
 - **全屏** — 遮挡任务栏，无法快速切换其他程序
 - **窗口全屏** — 顶部有白色标题栏，不美观
 
@@ -22,7 +22,7 @@
 ## 环境要求
 
 - Windows 10 / 11
-- 明日方舟PC端 / 明日方舟：终末地
+- 明日方舟PC端（官方桌面版）
 
 ## 使用方法
 
@@ -67,9 +67,7 @@ RestoreKey=^F7
 
 ## 多窗口支持
 
-脚本通过标题关键词"明日方舟"进行包含匹配，同时适用于明日方舟PC端和终末地。
-
-如果两个游戏同时运行：
+脚本通过标题关键词"明日方舟"进行包含匹配。如果同时打开了多个匹配窗口：
 - 每次按快捷键只操作**当前活跃（或最近活跃）的那个窗口**
 - 每个窗口的状态独立保存，可分别隐藏和恢复
-- 切换到另一个游戏窗口后再按快捷键即可操作该窗口
+- 切换到另一个窗口后再按快捷键即可操作该窗口
